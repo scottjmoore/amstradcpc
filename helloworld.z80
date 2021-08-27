@@ -1,0 +1,48 @@
+PrintChar   equ $bb5a
+SetPen      equ $bb90
+SetPaper    equ $bb96
+Mode        equ $bc0e
+
+    org     $1200
+
+Pen         db $00
+Paper       db $00
+
+Start
+    ld a,1
+    call Mode
+Loop
+    ld a,(Pen)
+    push af
+    call SetPen
+    pop af
+    inc a
+    ld (Pen),a
+    cp 16
+    jr nz,SkipPaper
+    xor a
+    ld (Pen),a
+    ld a,(Paper)
+    push af
+    call SetPaper
+    pop af
+    inc a
+    ld (Paper),a
+
+SkipPaper
+    ld hl,Message
+    call PrintString
+
+    jr Loop
+
+PrintString
+    ld a,(hl)
+    cp 255
+    ret z
+    inc hl
+    call PrintChar
+    jr PrintString
+
+Message
+    db      "Hello World!",13,10,255
+    
