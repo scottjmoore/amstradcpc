@@ -5,29 +5,22 @@ Mode        equ $bc0e
 
     org     $1200
 
-Pen         db $00
-Paper       db $00
-
 Start
-    ld a,1
+    ld a,0
     call Mode
 Loop
     ld a,(Pen)
-    push af
     call SetPen
-    pop af
+    ld a,(Pen)
     inc a
     ld (Pen),a
     cp 16
     jr nz,SkipPaper
-    xor a
-    ld (Pen),a
+
     ld a,(Paper)
-    push af
-    call SetPaper
-    pop af
     inc a
     ld (Paper),a
+    call SetPaper
 
 SkipPaper
     ld hl,Message
@@ -37,12 +30,18 @@ SkipPaper
 
 PrintString
     ld a,(hl)
-    cp 255
+    cp 0
     ret z
+PrintStringNotDone:
     inc hl
     call PrintChar
     jr PrintString
 
+Pen
+    db $00
+Paper
+    db $00
+
 Message
-    db      "Hello World!",13,10,255
+    db      "* MiSTer Rulez! *",13,10,0
     

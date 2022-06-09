@@ -1,3 +1,4 @@
+.vscode/
 *.tap
 *.bin
 *.lst
